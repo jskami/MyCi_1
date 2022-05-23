@@ -1,0 +1,15 @@
+<IfModule authz_core_module>
+    Require all denied
+</IfModule>
+<IfModule !authz_core_module>
+    Deny from all
+</IfModule>
+
+# <IfModule mod_rewrite.c>
+#     RewriteEngine On
+#  RewriteBase /
+#  RewriteCond $1 !^(index\.php|images|captcha|data|application|include|uploads|robots\.txt)
+#  RewriteCond %{REQUEST_FILENAME} !-f
+#  RewriteCond %{REQUEST_FILENAME} !-d
+#  RewriteRule ^(.*)$ /todo/index.php/$1 [L]
+# </IfModule>

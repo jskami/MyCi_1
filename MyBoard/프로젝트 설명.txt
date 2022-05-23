@@ -1,0 +1,125 @@
+* 22.05.23
+* made by 대상추
+* MyCi_1 project : board 
+*
+* https://palpit.tistory.com/entry/CodeIgniter-2-CodeIgniter-%EA%B0%9C%EB%B0%9C-%ED%99%98%EA%B2%BD-%EA%B5%AC%EC%84%B1?category=848182
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+1. 데이터베이스 설정하기
+(1) MySQL에 todo 데이터베이스 생성, items 테이블 생성
+    (cmd로 생성하기)
+    cd \
+    cd xampp
+    cd mysql
+    cd bin
+    mysqladmin -uroot -p create todo
+    mysql -uroot -p todo
+
+    create table items (
+    id INT(10) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    content VARCHAR(200) NULL,
+    created_on DATE NULL,
+    due_date DATE NULL,
+    used INT(1) NOT NULL DEFAULT 1
+    );
+
+    INSERT INTO items(content, created_on, due_date) VALUES('미팅', '2015-08-11', '2015-08-12');
+    INSERT INTO items(content, created_on, due_date) VALUES('스터디', '2015-08-13', '2015-08-15');
+
+(2) application/config/database.php에서 사용자, 비번, host, db명을 입력한다.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+2. list 만들기
+(1) 컨트롤러에서는 조회, 목록, 쓰기, 삭제 등의 액션을 제어한다.
+(2) 목록 함수의 경우 목록컨트롤러에서 모델을 호출하여 DB의 해당 내용을 가지고 온 뒤 뷰에 전달하여 화면을 출력하도록 한다.
+(3) 파일명과 클래스명은 동일해야 한다.
+(4) 모델에서 데이터를 가지고 오도록 쿼리문을 작성한다. 모델은 필요한 데이터만 반환한다.
+(5) 모델에서 반환할 데이터를 뷰에서 출력한다.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+3. detail_view 만들기
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+4. write 만들기
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+5. delete 만들기
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+6. 주소 줄이기
+(1) 직관적이고 깔끔한 URL을 위해 진행한다.
+(2) http://localhost/todo/index.php/main/view/1와 같은 형태에서
+    사용자 입장에서 별 의미 없는 index.php를 지워보도록 한다.
+(3) xampp/apache/conf/httpd.conf 파일을 연다.
+(4) LoadModule rewrite_module modules/mod_rewrite.so를 찾아서 주석을 제거하고 아파치를 재시작한다.
+(5) 서버 디렉터리의 AllowOverride 설정 부분을 All로 바꿔준다.
+    <Directory />
+    AllowOverride none -> All
+    Require all denied
+    </Directory>
+(6) 이제, CI의 설정파일과 .htaccess 파일을 수정하도록 한다.
+(7) config폴더 -> config.php -> $config['index_page'] = 'index.php';에서 index.php를 지우고 ''로 변경한다.
+(8) 에디터에서 todo 디렉터리에 .htaccess 파일을 만들고 다음 소스를 입력한다.
+    <IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    RewriteCond $1 !^(index\.php|images|captcha|data|application|include|uploads|robots\.txt)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ /todo/index.php/$1 [L]
+    </IfModule>
+(9) 저장 후 localhost/todo/main/lists/를 입력하여 확인해보자.
+## 나는 xampp의 htdocs 경로가 아닌 workspace의 프로젝트여서 그런지 확인할 수 없다. 아파치의 경로대로 시작했다면 될지도 모르겠다.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+7. 게시판 테이블 만들기
+(1) cmd명령어로 DB 생성
+    cd \
+    cd xampp
+    cd mysql
+    cd bin
+    mysqladmin -uroot -p create ci_book
+    mysql -uroot -p ci_book
+    grant select, insert, update, delete, create, alter, drop on ci_book .* to 'book_user'@'localhost' identified by 'book_password';
+
+(2) tbl생성
+    use ci_book
+    CREATE TABLE ci_board (
+    board_id int(10) NULL AUTO_INCREMENT PRIMARY KEY,
+    board_pid int(10) NULL DEFAULT 0 COMMENT '원글 번호',
+    user_id varchar(20) COMMENT '작성자ID',
+    user_name varchar(20) NOT NULL COMMENT '작성자 이름',
+    subject varchar(50) NOT NULL COMMENT '게시글 제목',
+    contents text NOT NULL COMMENT '게시글 내용',
+    hits int(10) NOT NULL DEFAULT 0 COMMENT '조회수',
+    reg_date datetime NOT NULL COMMENT '등록일',
+    INDEX board_pid (board_pid)
+    )
+    COMMENT='CodeIgniter 게시판'
+    COLLATE='utf8_general_ci'
+    ENGINE=MyISAM;
+
+    show tables;
+    desc ci_board;
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+8. 목록보기 기능 만들기
+(1) 7.에서 만든 테이블에 가상 데이터를 넣고 그 내용을 불러오는 프로그램을 만들어보자
+    INSERT INTO ci_board(user_id, user_name, subject, contents, hits, reg_date) 
+    VALUES ('advisor', 'Palpit', 'First Note', 'Test', 0, '2022-05-23 16:49:00');
+    (여러개 생성하면 된다.)
+    select*from ci_board;로 확인
+(2) 가상데이터를 불러올 소스 코드를 작성 한다. 컨트롤러부터 작업한다.
+    (todo 프로젝트와 마찬가지로 MyBoard폴더를 생성하여 CI를 복사해서 환경을 구성한다.)
+(3) 컨트롤러에서 테이블의 데이터를 불러올 메서드를 작성한다.
+(4) 모델을 이용하려면 DB에 연결을 해야 한다. database.php에 가서 db생성시 부여했던 정보를
+    입력한다.
+(5) 모델에서 데이터를 가져올 쿼리문을 작성한다.
+(6) 뷰를 작성한다. 헤더와 푸터는 CI의 _remap()를 이용해 자동으로 선언한다.
+    따라서 뷰는 헤더와 푸터를 제외한 컨텐츠만 들어간다.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+9. 페이징 만들기
+* 페이징은 과정이 복잡하고 이해하기 어려울 수 있지만 정형화된 형태라서
+    재사용이 쉽다.
+(1) 메인 컨트롤러의 목록 불러오기를 수정한다.
+
+
+
