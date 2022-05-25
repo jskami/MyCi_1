@@ -35,6 +35,7 @@
                 </header>
  
                 <form class="form-horizontal" method="post" action="" id="write_action">
+                    <!-- action에 주소가 비어있을 경우 현재 뷰를 호출한 주소(http://localhost/todo/index.php/main/write 로 내용을 전송한다. -->
                     <fieldset>
                         <div class="control-group">
                             <label class="control-label" for="input01">내용</label>

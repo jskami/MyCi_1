@@ -1,14 +1,13 @@
-<!-- 
-    22.05.23 board controller
-    made by 대상추
- -->
 <?php
 if(!defined('BASEPATH')) exit('No direct script access allowed');
 
-/* 게시판 메인 컨트롤러 */
+/* 22.05.23 board controller
+ * made by 대상추
+ * 게시판 메인 컨트롤러 
+ * */
 class Board extends CI_Controller {
     function __construct() {
-        parent::__construct();
+        parent::__construct();  // 기본 선언
         $this->load->database();
         $this->load->model('board_m');
         $this->load->helper(array('url', 'date'));
@@ -32,8 +31,8 @@ class Board extends CI_Controller {
 
     /* 목록 불러오기 */
     public function lists() {
-        // $data['list'] = $this->board_m->get_list();
-        // $this->load->view('board/list_v', $data);
+        // $data['list'] = $this->board_m->get_list();  // 생성자에서 모델을 로드하지 않고 모델 내 함수를 호출하면 에러가 발생한다.
+        // $this->load->view('board/list_v', $data);    // 뷰 역시 마찬가지이다. 즉, 생성자에서 라이브러리나 모델 등 웬만한 것은 로딩하고 함수호출하는 것이 좋다.
 
         //+++++++++++++++++++++++++++++++++++++++++++//
         // 검색어 초기화
@@ -68,7 +67,7 @@ class Board extends CI_Controller {
         // 페이지네이션 초기화
         $this->pagination->initialize($config);
         // 페이지 링크를 생성하여 view에서 사용하는 변수에 할당
-        $data['pagination'] = $this->pagination->create_links();
+        $data['pagination'] = $this->pagination->create_links();    // 보여줄 페이지네이션이 없을 경우 create_links()함수는 빈 문자열을 리턴한다.
 
         // 게시물 목록을 불러오기 위한 offset, limit 값 가져오기
         $page = $this -> uri -> segment($uri_segment, 1);
@@ -109,8 +108,14 @@ class Board extends CI_Controller {
      * @return string[]
      * */
     function segment_explode($seg) {
-        // 세그먼트 앞 뒤 "/" 제거 후 uri를 배열로 반환
-        $len = strlen($seg);
+        /* 세그먼트 앞 뒤 "/" 제거 후 uri를 배열로 반환
+         * 주소에서 '/'로 구분된 내용을 ci에서 세그먼트라 부른다.
+         * ci 주소 규칙에 index.php는 0번째 세그먼트이다.($this->uri->segment(0))
+         * 첫 번째 세그먼트 = main
+         * 두 번째 세그먼트 = view
+         * 세 번째 세그먼트 = 1  // 그래서 $id 변수에 1이 들어가기 위해 세그먼트는(3)으로 되는것이다.
+         */
+         $len = strlen($seg);
         if (substr($seg, 0, 1) == '/') {
             $seg = substr($seg, 1, $len);
         }

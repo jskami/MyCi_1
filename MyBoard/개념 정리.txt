@@ -1,0 +1,22 @@
+0. 주소체계
+- ci의 주소체계는 http://호스트/컨트롤러/메서드 로 구성되어있다.
+- 에러 방지의 목적으로 index 메서드는 항상 만드는 것이 좋다.
+
+1. 세그먼트 
+- 주소에서 '/'로 구분된 내용을 ci에서 세그먼트라 부른다.
+- ci 주소 규칙에 index.php는 0번째 세그먼트이다.($this->uri->segment(0))
+- 첫 번째 세그먼트 = main
+- 두 번째 세그먼트 = view
+- 세 번째 세그먼트 = 1  // 그래서 $id 변수에 1이 들어가기 위해 세그먼트는(3)으로 되는것이다.
+- ex) http://localhost/MyBoard/lists/ci_board에서 
+    segment(0) = index.php
+    segment(1) = board
+    segment(2) = lists
+    segment(3) = ci_board를 가리킨다.
+    
+2. if(!defined('BASEPATH')) exit('No direct script access allowed');
+- 보안과 관련이 있어서 그대로 쓰는 것이 좋다.
+- http://localhost/MyBoard/index.php/board/lists의 주소형식으로 접속해야 하는데, http://localhost/MyBoard/application/controllers/board.php로 접속을
+    시도할 경우 프로그램이 실행되는 것을 막아준다.
+
+3. 
