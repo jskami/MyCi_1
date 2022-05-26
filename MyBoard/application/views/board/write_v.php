@@ -51,6 +51,8 @@
                             </div>
  
                             <div class="form-actions">
+                                <a href="/Myboard/index.php/board/lists/<?php echo $this -> uri -> segment(3); ?>/
+                                    page/<?php echo $this -> uri -> segment(7); ?>" class="btn btn-primary"> 목록 </a>
                                 <button type="submit" class="btn btn-primary" id="write_btn">
                                     작성
                                 </button>

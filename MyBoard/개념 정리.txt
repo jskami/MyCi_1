@@ -8,8 +8,8 @@
 - 첫 번째 세그먼트 = main
 - 두 번째 세그먼트 = view
 - 세 번째 세그먼트 = 1  // 그래서 $id 변수에 1이 들어가기 위해 세그먼트는(3)으로 되는것이다.
-- ex) http://localhost/MyBoard/lists/ci_board에서 
-    segment(0) = index.php
+- ex) http://localhost/MyBoard/index.php/board/lists/ci_board에서 
+    segment(0) = index.php ----- 이녀석부터 0 시작 -----
     segment(1) = board
     segment(2) = lists
     segment(3) = ci_board를 가리킨다.

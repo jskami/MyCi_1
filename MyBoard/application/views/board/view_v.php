@@ -29,6 +29,21 @@
     </head>
     <body>
         <div id="main">
+            <header id="header" data-role="header" data-position="fixed">
+                <blockquote>
+                    <p>
+                        만들면서 배우는 CodeIgniter
+                    </p>
+                    <small>실행 예제</small>
+                </blockquote>
+            </header>
+            <nav id="gnb">
+                <ul>
+                    <li>
+                        <a rel="external" href="/MyBoard/index.php/<?php echo $this -> uri -> segment(1); ?>/lists/<?php echo $this -> uri -> segment(3); ?>"> 게시판 프로젝트 </a>
+                    </li>
+                </ul>
+            </nav>
             
             <article id="board_area">
                 <header>
@@ -68,7 +83,16 @@
                     </tfoot>
                 </table>
             </article>
-            
-        </div>
-    </body>
+            <footer id="footer">
+            <dl>
+                <dt>
+                    <a class="azubu" href="http://www.cikorea.net/" target="blank"> CodeIgniter 한국 사용자포럼 </a>
+                </dt>
+                <dd>
+                    Copyright by <em class="black">jskami</em>.
+                </dd>
+            </dl>
+        </footer>
+    </div>
+</body>
 </html>
