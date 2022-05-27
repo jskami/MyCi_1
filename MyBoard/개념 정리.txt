@@ -1,22 +1,39 @@
 0. 주소체계
-- ci의 주소체계는 http://호스트/컨트롤러/메서드 로 구성되어있다.
-- 에러 방지의 목적으로 index 메서드는 항상 만드는 것이 좋다.
+    - ci의 주소체계는 http://호스트/컨트롤러/메서드 로 구성되어있다.
+    - 에러 방지의 목적으로 index 메서드는 항상 만드는 것이 좋다.
 
 1. 세그먼트 
-- 주소에서 '/'로 구분된 내용을 ci에서 세그먼트라 부른다.
-- ci 주소 규칙에 index.php는 0번째 세그먼트이다.($this->uri->segment(0))
-- 첫 번째 세그먼트 = main
-- 두 번째 세그먼트 = view
-- 세 번째 세그먼트 = 1  // 그래서 $id 변수에 1이 들어가기 위해 세그먼트는(3)으로 되는것이다.
-- ex) http://localhost/MyBoard/index.php/board/lists/ci_board에서 
-    segment(0) = index.php ----- 이녀석부터 0 시작 -----
-    segment(1) = board
-    segment(2) = lists
-    segment(3) = ci_board를 가리킨다.
+    - 주소에서 '/'로 구분된 내용을 ci에서 세그먼트라 부른다.
+    - ci 주소 규칙에 index.php는 0번째 세그먼트이다.($this->uri->segment(0))
+    - 첫 번째 세그먼트 = main
+    - 두 번째 세그먼트 = view
+    - 세 번째 세그먼트 = 1  // 그래서 $id 변수에 1이 들어가기 위해 세그먼트는(3)으로 되는것이다.
+    - ex) http://localhost/MyBoard/index.php/board/lists/ci_board에서 
+        segment(0) = index.php ----- 이녀석부터 0 시작 -----
+        segment(1) = board
+        segment(2) = lists
+        segment(3) = ci_board를 가리킨다.
     
 2. if(!defined('BASEPATH')) exit('No direct script access allowed');
-- 보안과 관련이 있어서 그대로 쓰는 것이 좋다.
-- http://localhost/MyBoard/index.php/board/lists의 주소형식으로 접속해야 하는데, http://localhost/MyBoard/application/controllers/board.php로 접속을
-    시도할 경우 프로그램이 실행되는 것을 막아준다.
+    - 보안과 관련이 있어서 그대로 쓰는 것이 좋다.
+    - http://localhost/MyBoard/index.php/board/lists의 주소형식으로 접속해야 하는데, http://localhost/MyBoard/application/controllers/board.php로 접속을
+        시도할 경우 프로그램이 실행되는 것을 막아준다.
 
-3. 
+3. 검증 규칙 설정 // https://palpit.tistory.com/entry/CodeIgniter-5-%ED%8F%BC-%EA%B2%80%EC%A6%9D%ED%95%98%EA%B8%B0?category=848182
+    - set_rules()함수는 세 가지 파라미터를 사용한다.
+        ex) $this->form_validation->set_rules('field_name', 'err_msg', 'valid_rules');
+
+        (1) 첫 번째 파라미터는 필드 이름이다. 뷰의 폼에 설정한 이름과 일치해야 한다.
+        (2) 두 번째 파라미터는 필드 이름에 대한 에러 메시지에 표시할 내용이다.
+        (3) 세 번째 파라미터는 폼 검증에 필요한 검사 규칙을 선언한다.
+            ex) required, min_length, max_length, matches, valid_email 등이 있다.
+            (test controller에 적용된 규칙을 보고 이해할 것)
+
+4. 폼 데이터 복원
+    - input, radio, select태그 등 속성에 set_value('필드이름')을 넣어 이전에 입력한 폼 데이터를 불러온다.
+    (1) set_value() : input, textarea
+    (2) set_select() : select
+    (3) set_checkbox() : chechbox, 주의! 체크박스는 여러개의 값이 넘어오기 때문에 []를 작성해줘야 정상 작동한다.(뷰에서도 []선언)
+    (4) set_radio : 체크박스와 동일
+
+    

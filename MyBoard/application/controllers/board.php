@@ -85,7 +85,7 @@ class Board extends CI_Controller {
 
     /* url 중 key 값을 구분하여 값을 가져오도록한다. 
      * 
-     * @param Array $uri : segment_explode 한 url값
+     * @param Array $url : segment_explode 한 url값
      * @param String $key : 가져오려는 값의 key
      * @trturn String $url[$k] : 리턴 값
      *
@@ -142,9 +142,17 @@ class Board extends CI_Controller {
 
     /* 게시물 작성 */
     function write() {
-        echo '<meta http-equiv="content-type" content="text/html; charset=utf-8" />';
+        // 폼 검증 라이브러리 로드
+        $this->load->library('form_validation');
+        // 폼 검증할 필드와 규칙 사전 정의
+        $this->form_validation->set_rules('subject', '제목', 'required');
+        $this->form_validation->set_rules('contents', '내용', 'required');
         
-        if($_POST) {
+        
+        echo '<meta http-equiv="content-type" content="text/html; charset=utf-8" />';
+        // if($_POST) {
+        if($this->form_validation->run() == TRUE) { // 15-3 (3)참고
+            
             // 글 작성 post 전송 시, 경고창 헬퍼 로딩
             $this->load->helper('alert');
 

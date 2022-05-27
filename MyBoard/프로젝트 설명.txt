@@ -202,3 +202,74 @@
     - 삭제가 안된다. 접근할 수 없다는데.. 처음에 권한 부여 했는데 왜지..?
 -------------------게시판 프로젝트 끝---------------------
 
+15. 폼 검증(form-validation)
+    - 값의 존재 유무, 데이터 형식, 최소/최대 길이 제한, ID/PW의 중복 체크 등을 검증한다.
+    - 컨트롤러에서 사전 정의한 규칙의 첫 번째 파라미터(폼에서 사용할 이름)와 폼 뷰의 각 input name과 동일하야만 한다.
+(1) 검증 규칙 설정
+    - callback함수를 지원하여 데이터 중복 여부 체크 등 원하는 순서대로 원하는 만큼 검증 규칙을 선언할 수 있다.
+    - 검사 규칙은 set_rules()함수를 사용해서 설정한다.
+
+15-1. 폼 데이터 복원
+    - 폼 검증이 실패할 경우 입력했던 값들을 다시 불러와 수정해주면 편한데, 그 기능이 없다.
+        그래서 이전에 입력한 폼 데이터를 복원하기 위한 메서드로 set_value('필드이름')을 사용한다.
+    - input, radio, select 속성에 추가한다.
+
+15-2. 콜백함수
+    - 주로 회원가입시 ID중복 여부를 체크하는데 사용한다.
+    - set_rule()의 세 번째 파라미터에 선언하여 사용한다.
+    (일단, MySQL에서 users tbl을 만들고 샘플 유저를 입력하자.)
+    
+    CREATE TABLE `users` (
+    `id` INT(10) null AUTO_INCREMENT,
+    `username` varchar(50) null COMMENT '아이디',
+    `password` varchar(50) null COMMENT '비밀번호',
+    `name` varchar(50) null COMMENT '이름',
+    `email` varchar(50) null COMMENT '이메일',
+    `reg_date` datetime null COMMENT '가입일',
+    PRIMARY KEY (`id`)
+    )
+    COMMENT = '회원테이블'
+    COLLATE = 'utf8_general_ci'
+    ENGINE = MyISAM
+    ROW_FORMAT = DEFAULT
+
+    INSERT INTO `users` (`username`, `password`, `name`, `email`, `reg_date`) 
+	VALUES ('대상추', '1234', '둔둔', 'jskami_@naver.com', '2022-05-27 14:53:00');
+
+    - test 컨트롤러를 수정한다.
+
+15-3. 에러 메시지 설정과 표시
+    - CI의 모든 내장 에러 메시지는 system/language/english에 위치하며, 폼 검증 에러 메시지는 form_validation_lang.php이다.
+    (1) 에러 메시지를 한글로 바꾸기
+        - system/language/english 디렉터리의 내용을 application/language/korean 디렉터리를 생성 후 모두 복사한다.
+            (ci는 언어 or 라이브러리를 찾을 때 application 하위에서 먼저 찾고 없으면 system 하위에서 찾기 때문)
+        - 복사 후 application/config/config.php에서 언어를 korean으로 변경한다.
+        - korean 디렉터리에서 form_validation_lang.php를 찾아 한글로 수정한다.
+        - 이제 에러 메시지는 한글로 나타날 것이다.
+    
+    (2) 에러 메시지를 개별적으로 표시하기
+        - 에러 메시지를 각 필드 아래 or 옆에 표기하면 사용자가 항목을 찾기 수월하다.
+        - forms_v.php 뷰 파일을 수정한다.
+        - #01 : 콜백 함수에서 username_check 룰에 대해 에러 메시지를 선언하기 때문에 작동할 때와 하지 않을 때 두가지 경우를 모두 처리하기 위해 분기처리한다.
+
+    (3) 게시판 입력 기능에 폼 검증 추가하기
+        - board 컨트롤러에 폼 검증 라이브러리를 로딩하고 룰을 설정한다.
+        - $_POST 전송값이 있는지 확인하는 것이 아닌 폼 검증이 성공했는지 여부에 따라 분개하도록 수정한다.
+            if문 안에 있던 subject, contents 값 유무를 확인하는 부분은 폼 검증에서 처리하기 때문에 삭제한다.
+        - write_v 뷰를 수정한다.
+        - 기존 소스 상단의 JQuery로 작성된 폼 검증 역할을 삭제하고, 폼 데이터 복원과 에러 메시지 출력 부분을 추가하였다.
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -75,8 +75,8 @@
          * */
         function insert_board($arrays) {
             $insert_array = array(
-                'board_pid' => 0,   // 원글이라 0 입력, 댓글일 경우 원글 번호 입력
-                'user_id' => 'advisor', // 7장에서 로그인 처리후엔 로그인한 아이디
+                'board_pid' => 0,
+                'user_id' => 'advisor',
                 'user_name' => '대상추',
                 'subject' => $arrays['subject'],
                 'contents' => $arrays['contents'],
